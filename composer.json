@@ -1,6 +1,6 @@
 {
     "name": "vinkas/visa",
-    "description": "Firebase Authentication Server in PHP using Laravel Framework",
+    "description": "Firebase Authentication System in PHP using Laravel Framework",
     "keywords": ["firebase", "authentication", "auth", "server", "visa", "vinkas", "laravel"],
     "license": "MIT",
     "type": "project",

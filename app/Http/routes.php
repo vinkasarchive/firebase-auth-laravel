@@ -14,3 +14,5 @@
 Route::get('/', function () {
     return view('index');
 });
+
+Route::get('Login', 'Auth\AuthController@showLoginForm');

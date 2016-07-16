@@ -1,6 +1,6 @@
 # Vinkas Visa
 
-## Firebase Authentication Server in PHP using Laravel Framework
+## Firebase Authentication System in PHP using Laravel Framework
 
 ## Security Vulnerabilities
 
