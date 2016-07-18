@@ -10,22 +10,10 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/vinkas/visa.css" />
 </head>
-<body>
-  <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">{{ getEnv('APP_NAME')}}</a>
-      </div>
-
-      <div id="navbar" class="collapse navbar-collapse pull-right">
-        <ul class="nav navbar-nav">
-          <li><a href="">Sign in</a></li>
-          <li><a href="">Create account</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
+<body class="visa">
+  <header id="header" class="container">
+    <h1 class="logo"><img src="https://cdn.vinkas.com/images/branding/vinkas/logo/1x/color_249x72dp.png" style="max-height: 50px" /></h1>
+  </header>
   @yield('content')
   <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase-auth.js"></script>

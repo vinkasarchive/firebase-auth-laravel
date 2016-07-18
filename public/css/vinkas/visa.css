@@ -1,3 +1,7 @@
-#login { text-align: center; }
-#login h2 { font-size: 18px; }
-#login .form * { text-align: left;}
+.visa { text-align: center; }
+.visa #header { margin-bottom: 5px; }
+.visa .login .panel { margin-top: 10px; box-shadow: 0 2px 4px 0 rgba(0,0,0,.25); }
+.visa .login .panel-body { background-color: #fafafa; padding:10px 15px 10px 15px; }
+.visa .login .btn-group { margin-top:  10px; }
+.visa .login .btn-group .btn { margin-right: 10px; margin-bottom: 10px; color: #757575; box-shadow: 0 2px 4px 0 rgba(0,0,0,.25); }
+.visa .login .btn-group .btn img { width: 24px; height: 24px; margin-right: 10px; }
