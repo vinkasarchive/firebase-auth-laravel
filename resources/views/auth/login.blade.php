@@ -1,5 +1,13 @@
 @extends('layout')
 
+@section('title')
+Sign in with your {{ getEnv('APP_NAME') }} account
+@endsection
+
+@section('header-right')
+<a href="Register" class="nav-btn btn btn-success">Create account</a>
+@endsection
+
 @section('content')
 <div class="login container">
   <div class="row">
@@ -8,8 +16,7 @@
         <div class="col-sm-8 col-xs-10 col-sm-offset-2 col-xs-offset-1">
           <div class="panel">
             <div class="panel-body">
-              <h1 class="h4">Sign in with your {{ getEnv('APP_NAME') }} account</h1>
-              <hr />
+              <br />
               <form class="form">
                 <div class="form-group text-left">
                   <input type="text" class="form-control" id="login" name="login" placeholder="Username or Email address">
@@ -29,18 +36,20 @@
                   <a class="text-danger">Need help?</a>
                 </div>
               </form>
-              <hr />
-              <h4>New user? <a>Create account</a></h4>
             </div>
           </div>
         </div>
       </div>
+      <div class="social">
       <div class="btn-group" role="group" aria-label="social">
-        <a class="btn"><img src="images/svg/google.svg" alt="Google" /> Sign in</a>
-        <a class="btn"><img src="images/svg/facebook.svg" alt="Facebook" /> Sign in</a>
-        <a class="btn"><img src="images/svg/twitter.svg" alt="Twitter" /> Sign in</a>
-        <a class="btn"><img src="images/svg/github.svg" alt="Github" /> Sign in</a>
+        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="Google" /> Sign in</a>
+        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg" alt="Facebook" /> Sign in</a>
+        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg" alt="Twitter" /> Sign in</a>
+        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_github.svg" alt="Github" /> Sign in</a>
       </div>
+    </div>
+      <hr />
+      <h4>New user? <a>Create account</a></h4>
     </div>
   </div>
 </div>
