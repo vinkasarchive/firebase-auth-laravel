@@ -41,16 +41,37 @@ Sign in with your {{ getEnv('APP_NAME') }} account
         </div>
       </div>
       <div class="social">
-      <div class="btn-group" role="group" aria-label="social">
-        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="Google" /> Sign in</a>
-        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg" alt="Facebook" /> Sign in</a>
-        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg" alt="Twitter" /> Sign in</a>
-        <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_github.svg" alt="Github" /> Sign in</a>
+        <div class="btn-group" role="group" aria-label="social">
+          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="Google" /> Sign in</a>
+          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg" alt="Facebook" /> Sign in</a>
+          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg" alt="Twitter" /> Sign in</a>
+          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_github.svg" alt="Github" /> Sign in</a>
+        </div>
       </div>
-    </div>
       <hr />
       <h4>New user? <a>Create account</a></h4>
     </div>
   </div>
 </div>
+@endsection
+
+@section('firebase-script')
+<script>
+function google() {
+  var provider = new firebase.auth.GoogleAuthProvider();
+  firebase.auth().signInWithRedirect(provider);
+}
+firebase.auth().getRedirectResult().then(function(result) {
+  if (result.credential) {
+    var token = result.credential.accessToken;
+  }
+  var user = result.user;
+  alert(user.displayName);
+}).catch(function(error) {
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  var email = error.email;
+  var credential = error.credential;
+});
+</script>
 @endsection
