@@ -32,7 +32,7 @@ Create {{ getEnv('APP_NAME') }} Account
     <div class="col-lg-4 col-md-5 col-sm-6 col-lg-offset-1">
       <div class="panel">
         <div class="panel-body">
-          <form id="signup" name="signup" class="form" method="post">
+          <form action="" id="signup" name="signup" class="form" method="post">
             <div class="form-group text-left">
               <input type="text" class="form-control" id="name" name="name" placeholder="Full name" required>
             </div>
@@ -47,7 +47,8 @@ Create {{ getEnv('APP_NAME') }} Account
             </div>
             <div class="form-group">
               <script src='https://www.google.com/recaptcha/api.js'></script>
-              <div class="g-recaptcha" data-sitekey="{{ getenv('RECAPTCHA_SITE_KEY') }}"></div>
+              <div id="recaptcha" class="g-recaptcha" data-sitekey="{{ getenv('RECAPTCHA_SITE_KEY') }}"></div>
+              <input type="hidden" class="hrecaptcha" id="hrecaptcha" name="hrecaptcha" />
             </div>
             <div class="form-group">
               <button id="submit" type="submit" class="btn btn-success btn-block">Create account</button>
@@ -86,6 +87,7 @@ jQuery.validator.setDefaults({
   }
 });
 $("#signup").validate({
+  ignore: ".ignore",
   rules: {
     name: {
       required: true
@@ -102,14 +104,40 @@ $("#signup").validate({
       required: true,
       equalTo: "#password"
     },
-    'g-recaptcha-response': {
-      required: true
+    hrecaptcha: {
+      required: function () {
+        if (grecaptcha.getResponse() == '') {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
-    submitHandler: function(form) {
-      $("#submit").prop("disabled", true);
-      register();
-      return false;
-    }
+  },
+  submitHandler: function(form) {
+    $("#submit").prop("disabled", true);
+    $.ajax({
+      url: '/validate/recaptcha',
+      type: "post",
+      data: {
+        'g-recaptcha-response': function() {
+          return grecaptcha.getResponse();
+        }, "_token":"{{ csrf_token() }}"
+      },
+      success: function(data){
+        if(data.success)
+        register();
+        else {
+          alert(data.message);
+          $("#submit").prop("disabled", false);
+        }
+      },
+      error: function(xhr, textStatus, errorThrown){
+        alert(textStatus);
+        $("#submit").prop("disabled", false);
+      }
+    });
+    return false;
   }
 });
 </script>
@@ -117,22 +145,24 @@ $("#signup").validate({
 function register() {
   var email = $('#email').val();
   var password = $('#password').val();
-  var spassword = $('#cpassword').val();
   firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
-    user.sendEmailVerification();
     var name = $('#name').val();
     user.updateProfile({
       displayName: name
     }).then(function() {
-      alert('success');
+      user.sendEmailVerification();
+      alert("Verification email sent to your email. Please check your inbox.");
     }, function(error) {
       alert(error.message);
+      user.sendEmailVerification();
+      alert("Verification email sent to your email. Please check your inbox.");
     });
   }, function(error) {
     var errorCode = error.code;
     var errorMessage = error.message;
+    alert(error.message);
+    $("#submit").prop("disabled", false);
   });
-  alert(error.message);
   return false;
 }
 </script>

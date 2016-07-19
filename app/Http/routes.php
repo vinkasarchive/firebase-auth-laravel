@@ -17,3 +17,6 @@ Route::get('/', function () {
 
 Route::get('Login', 'Auth\AuthController@showLoginForm');
 Route::get('Register', 'Auth\AuthController@showRegistrationForm');
+
+Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha');
+Route::get('validate/recaptcha', 'ValidationController@validateRecaptcha');
