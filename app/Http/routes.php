@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('Login', 'Auth\AuthController@showLoginForm');
-Route::get('Register', 'Auth\AuthController@showRegistrationForm');
+Route::get('Login', 'Auth\AuthController@showLoginForm')->name('login');
+Route::get('Register', 'Auth\AuthController@showRegistrationForm')->name('register');
+Route::get('email/verification', 'Auth\EmailController@getVerification')->name('email-verification');
 
-Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha');
-Route::get('validate/recaptcha', 'ValidationController@validateRecaptcha');
+Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha')->name('recatcha');

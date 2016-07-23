@@ -11,8 +11,8 @@ Sign in with your {{ getEnv('APP_NAME') }} account
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   var mode = getParameterByName('mode');
-  var actionCode = getParameterByName('oobCode'};
-  var apiKey = getParameterByName('apiKey'};
+  var actionCode = getParameterByName('oobCode');
+  var apiKey = getParameterByName('apiKey');
 
   var auth = firebase.auth();
 
@@ -65,7 +65,7 @@ function handleRecoverEmail(auth, actionCode) {
 
 function handleVerifyEmail(auth, actionCode) {
   auth.applyActionCode(actionCode).then(function(resp) {
-
+    window.location.replace("{!! route('login') !!}");
   }).catch(function(error) {
 
   });
