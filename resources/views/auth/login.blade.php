@@ -5,7 +5,7 @@ Sign in with your {{ getEnv('APP_NAME') }} account
 @endsection
 
 @section('header-right')
-<a href="Register" class="nav-btn btn btn-success">Create account</a>
+<a href="{!! route('register') !!}" class="nav-btn btn btn-success">Create account</a>
 @endsection
 
 @section('content')
@@ -17,7 +17,7 @@ Sign in with your {{ getEnv('APP_NAME') }} account
           <div class="panel">
             <div class="panel-body">
               <br />
-              <form class="form">
+              <form class="form" method="post">
                 <div class="form-group text-left">
                   <input type="text" class="form-control" id="login" name="login" placeholder="Username or Email address">
                 </div>
@@ -26,11 +26,11 @@ Sign in with your {{ getEnv('APP_NAME') }} account
                 </div>
                 <div class="form-group checkbox text-left">
                   <label>
-                    <input type="checkbox"> Stay signed in
+                    <input id="remember" name="remember" type="checkbox"> Stay signed in
                   </label>
                 </div>
                 <div class="form-group">
-                  <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                  <button onclick="return signin();" type="submit" class="btn btn-primary btn-block">Sign in</button>
                 </div>
                 <div class="text-right">
                   <a class="text-danger">Need help?</a>
@@ -73,5 +73,62 @@ firebase.auth().getRedirectResult().then(function(result) {
   var email = error.email;
   var credential = error.credential;
 });
+function signin() {
+  NProgress.start();
+  var email = $("#login").val();
+  var password = $("#password").val();
+  var remember = $("#remember").is(":checked");
+  if(remember)
+  remember = 1;
+  else
+  remember = 0;
+  firebase.auth().signInWithEmailAndPassword(email, password).then(function(user) {
+    NProgress.inc();
+    if(user.emailVerified) {
+      user.getToken(true).then(function(idToken) {
+        NProgress.inc();
+        $.ajax({
+          url: '/ajax/login',
+          type: "post",
+          data: {
+            'id_token': idToken,
+            'name': user.displayName,
+            'email': user.email,
+            'photo_url': user.photoURL,
+            "remember": remember,
+            "_token": "{{ csrf_token() }}"
+          },
+          success: function(data){
+            if(data.success) {
+              NProgress.set(0.9);
+              window.location.replace("/");
+            }
+            else {
+              $("#submit").prop("disabled", false);
+              NProgress.done();
+              alert(data.message);
+            }
+          },
+          error: function(xhr, textStatus, errorThrown){
+            $("#header").html(xhr.responseText);
+            $("#submit").prop("disabled", false);
+            NProgress.done();
+            alert(textStatus);
+          }
+        });
+      }).catch(function(error) {
+        // Handle error
+      });
+    } else {
+
+    }
+  }).catch(function(error) {
+    // Handle Errors here.
+    var errorCode = error.code;
+    var errorMessage = error.message;
+    // ...
+  });
+  return false;
+}
 </script>
 @endsection

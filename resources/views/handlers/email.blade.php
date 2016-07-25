@@ -9,6 +9,16 @@ Sign in with your {{ getEnv('APP_NAME') }} account
 
 @section('firebase-script')
 <script>
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   var mode = getParameterByName('mode');
   var actionCode = getParameterByName('oobCode');
@@ -65,9 +75,9 @@ function handleRecoverEmail(auth, actionCode) {
 
 function handleVerifyEmail(auth, actionCode) {
   auth.applyActionCode(actionCode).then(function(resp) {
-    window.location.replace("{!! route('login') !!}");
+    window.location.replace("{!! route('login') !!}?success=Your+email+address+verified+successfully");
   }).catch(function(error) {
-
+    alert(error.message);
   });
 }
 </script>

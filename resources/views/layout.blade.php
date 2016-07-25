@@ -27,10 +27,14 @@
           @hasSection ('header-right')
           @yield('header-right')
           @else
+          @if (Auth::check())
+          {{ Auth::user()->name }}
+          @else
           <div class="btn-group" role="group" aria-label="account">
-            <a href="Register" class="nav-btn btn btn-success">Create account</a>
-            <a href="/Login" class="nav-btn btn btn-primary">Sign in</a>
+            <a href="{!! route('register') !!}" class="nav-btn btn btn-success">Create account</a>
+            <a href="{!! route('login') !!}" class="nav-btn btn btn-primary">Sign in</a>
           </div>
+          @endif
           @endif
         </div>
       </div>
@@ -51,6 +55,8 @@
   <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase-auth.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script src='/modules/nprogress/nprogress.js'></script>
+  <link rel='stylesheet' href='/modules/nprogress/nprogress.css'/>
   <script>
   var config = {
     apiKey: "{{ getEnv('FIREBASE_API_KEY')}}",
@@ -61,7 +67,7 @@
     if (user) {
 
     } else {
-      
+
     }
   });
   </script>

@@ -5,7 +5,7 @@ Create {{ getEnv('APP_NAME') }} Account
 @endsection
 
 @section('header-right')
-<a href="/Login" class="nav-btn btn btn-primary">Sign in</a>
+<a href="{!! route('login') !!}" class="nav-btn btn btn-primary">Sign in</a>
 @endsection
 
 @section('content')

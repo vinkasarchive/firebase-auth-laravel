@@ -7,6 +7,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Vinkas\Visa\Traits\AuthenticatesAndRegistersUsers as VinkasVisa;
 
 class AuthController extends Controller
 {
@@ -21,7 +22,7 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins, VinkasVisa;
 
     /**
      * Where to redirect users after login / registration.
@@ -49,7 +50,10 @@ class AuthController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'id_token' => 'required|max:255',
+            'id_token' => 'required',
+            'remember' => 'boolean',
+            'email' => 'email',
+            'photo_url' => 'url',
         ]);
     }
 
@@ -62,8 +66,10 @@ class AuthController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'id' => $data['id'],
             'name' => $data['name'],
-            'email' => $data['email']
+            'email' => $data['email'],
+            'photo_url' => $data['photo_url'],
         ]);
     }
 }

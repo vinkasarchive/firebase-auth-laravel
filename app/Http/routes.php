@@ -15,8 +15,10 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('Login', 'Auth\AuthController@showLoginForm')->name('login');
-Route::get('Register', 'Auth\AuthController@showRegistrationForm')->name('register');
+Route::get('login', 'Auth\AuthController@showLoginForm')->name('login');
+Route::get('register', 'Auth\AuthController@showRegistrationForm')->name('register');
+
+Route::post('ajax/login', 'Auth\AuthController@ajaxLogin')->name('ajax-login');
 Route::get('email/verification', 'Auth\EmailController@getVerification')->name('email-verification');
 
 Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha')->name('recatcha');
