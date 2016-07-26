@@ -13,7 +13,11 @@ use App\User;
 trait AuthenticatesUsers
 {
 
-  public function auth(Request $request) {
+  public function getAuth(Request $request) {
+    return view('vinkas.visa.auth');
+  }
+
+  public function postAuth(Request $request) {
     $data = $request->all();
     $validator = $this->validator($data);
     if ($validator->fails())

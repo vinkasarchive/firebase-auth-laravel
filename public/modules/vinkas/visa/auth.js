@@ -1,4 +1,4 @@
-function auth(user, remember, token) {
+function auth(user, token) {
   user.getToken(true).then(function(idToken) {
     NProgress.inc();
     $.ajax({
@@ -9,7 +9,6 @@ function auth(user, remember, token) {
         'name': user.displayName,
         'email': user.email,
         'photo_url': user.photoURL,
-        'remember': remember,
         '_token': token
       },
       success: function(data){
@@ -18,14 +17,14 @@ function auth(user, remember, token) {
           window.location.replace(data.redirectTo);
         }
         else {
-          onFail(data.message);
+          notice(data.message);
         }
       },
       error: function(xhr, textStatus, errorThrown) {
-        onFail(textStatus);
+        notice(textStatus);
       }
     });
   }).catch(function(error) {
-    onFail(error);
+    notice(error);
   });
 }

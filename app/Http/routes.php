@@ -15,11 +15,10 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('login', 'Auth\AuthController@showLoginForm')->name('login');
-Route::get('register', 'Auth\AuthController@showRegistrationForm')->name('register');
-Route::get('logout', 'Auth\AuthController@logout')->name('logout');
+Route::get('auth', 'Auth\AuthController@getAuth')->name('getAuth');
+Route::post('auth', 'Auth\AuthController@postAuth')->name('postAuth');
 
-Route::post('auth', 'Auth\AuthController@auth')->name('auth');
+Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 Route::get('email/verification', 'Auth\EmailController@getVerification')->name('email-verification');
 
 Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha')->name('recatcha');
