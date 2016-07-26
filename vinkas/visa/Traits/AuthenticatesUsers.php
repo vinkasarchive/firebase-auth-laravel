@@ -13,11 +13,11 @@ use App\User;
 trait AuthenticatesUsers
 {
 
-  public function ajaxLogin(Request $request) {
+  public function auth(Request $request) {
     $data = $request->all();
     $validator = $this->validator($data);
     if ($validator->fails())
-    return $this->onFail($validator->errors()->first() . " " . $request->input('remember'));
+    return $this->onFail($validator->errors()->first());
 
     JWT::$leeway = 8;
     $content = file_get_contents("https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com");
@@ -33,8 +33,11 @@ trait AuthenticatesUsers
     return $this->onFail('Invalid user');
     else {
       $uid = $jwt->sub;
-      $this->visaLogin($uid, $request);
-      return response()->json(['success' => true]);
+      $user = $this->visaLogin($uid, $request);
+      if($user)
+      return response()->json(['success' => true, 'redirectTo' => $this->redirectPath()]);
+      else
+      return $this->onFail('Error');
     }
   }
 
@@ -43,25 +46,13 @@ trait AuthenticatesUsers
   }
 
   protected function visaLogin($uid, $request) {
-    $remember = false;
-    if($request->has('remember'))
-    $remember = $request->input('remember');
-
     $user = User::where('id', $uid)->first();
-    if($user == null) {
-      $data['id'] = $uid;
-      $data['name'] = null;
-      $data['email'] = null;
-      $data['photo_url'] = null;
-      if($request->has('name'))
-      $data['name'] = $request->input('name');
-      if($request->has('email'))
-      $data['email'] = $request->input('email');
-      if($request->has('photo_url'))
-      $data['photo_url'] = $request->input('photo_url');
-      $this->create($data);
-    }
-    Auth::loginUsingId($uid, $remember);
+
+    if($user == null)
+    $this->visaRegister($uid, $request);
+
+    $remember = $request->has('remember') ? $request->input('remember') : false;
+    return Auth::loginUsingId($uid, $remember);
   }
 
 }

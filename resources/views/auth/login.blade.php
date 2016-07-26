@@ -42,8 +42,8 @@ Sign in with your {{ getEnv('APP_NAME') }} account
       </div>
       <div class="social">
         <div class="btn-group" role="group" aria-label="social">
-          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="Google" /> Sign in</a>
-          <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg" alt="Facebook" /> Sign in</a>
+          <a title="Sign in with Google" onclick="return signInWith('google')" class="btn"><img src="https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg" alt="Google" /> Sign in</a>
+          <a title="Sign in with Facebook" onclick="return signInWith('facebook')" class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg" alt="Facebook" /> Sign in</a>
           <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg" alt="Twitter" /> Sign in</a>
           <a class="btn"><img src="https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_github.svg" alt="Github" /> Sign in</a>
         </div>
@@ -57,78 +57,64 @@ Sign in with your {{ getEnv('APP_NAME') }} account
 
 @section('firebase-script')
 <script>
-function google() {
-  var provider = new firebase.auth.GoogleAuthProvider();
+function signInWith(providerName) {
+  NProgress.start();
+  var provider;
+  switch (providerName) {
+    case 'google':
+    provider = new firebase.auth.GoogleAuthProvider();
+    break;
+    case 'facebook':
+    provider = new firebase.auth.FacebookAuthProvider();
+    break;
+    default:
+    break;
+  }
   firebase.auth().signInWithRedirect(provider);
+  return false;
 }
 firebase.auth().getRedirectResult().then(function(result) {
-  if (result.credential) {
-    var token = result.credential.accessToken;
-  }
   var user = result.user;
-  alert(user.displayName);
+  if(user) {
+    if (result.credential) {
+      var accessToken = result.credential.accessToken;
+    }
+    NProgress.start();
+    auth(user, 0, token);
+  }
 }).catch(function(error) {
   var errorCode = error.code;
   var errorMessage = error.message;
-  var email = error.email;
-  var credential = error.credential;
+  onFail(error.message);
 });
 function signin() {
   NProgress.start();
   var email = $("#login").val();
   var password = $("#password").val();
-  var remember = $("#remember").is(":checked");
-  if(remember)
-  remember = 1;
-  else
-  remember = 0;
+  var remember = function () {
+    if($("#remember").is(":checked"))
+    return 1;
+    else
+    return 0;
+  };
   firebase.auth().signInWithEmailAndPassword(email, password).then(function(user) {
     NProgress.inc();
     if(user.emailVerified) {
-      user.getToken(true).then(function(idToken) {
-        NProgress.inc();
-        $.ajax({
-          url: '/ajax/login',
-          type: "post",
-          data: {
-            'id_token': idToken,
-            'name': user.displayName,
-            'email': user.email,
-            'photo_url': user.photoURL,
-            "remember": remember,
-            "_token": "{{ csrf_token() }}"
-          },
-          success: function(data){
-            if(data.success) {
-              NProgress.set(0.9);
-              window.location.replace("/");
-            }
-            else {
-              $("#submit").prop("disabled", false);
-              NProgress.done();
-              alert(data.message);
-            }
-          },
-          error: function(xhr, textStatus, errorThrown){
-            $("#header").html(xhr.responseText);
-            $("#submit").prop("disabled", false);
-            NProgress.done();
-            alert(textStatus);
-          }
-        });
-      }).catch(function(error) {
-        // Handle error
-      });
+      auth(user, remember, token);
     } else {
-
+      onFail("{!! trans('visa.warning_verify_email') !!}");
     }
   }).catch(function(error) {
-    // Handle Errors here.
     var errorCode = error.code;
     var errorMessage = error.message;
-    // ...
+    onFail(errorMessage);
   });
   return false;
+}
+function onFail(message) {
+  $("#submit").prop("disabled", false);
+  NProgress.done();
+  $("#noticeboard").html('<div class="alert alert-warning alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> ' + message + '</div>');
 }
 </script>
 @endsection

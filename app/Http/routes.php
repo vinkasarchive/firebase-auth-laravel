@@ -17,8 +17,9 @@ Route::get('/', function () {
 
 Route::get('login', 'Auth\AuthController@showLoginForm')->name('login');
 Route::get('register', 'Auth\AuthController@showRegistrationForm')->name('register');
+Route::get('logout', 'Auth\AuthController@logout')->name('logout');
 
-Route::post('ajax/login', 'Auth\AuthController@ajaxLogin')->name('ajax-login');
+Route::post('auth', 'Auth\AuthController@auth')->name('auth');
 Route::get('email/verification', 'Auth\EmailController@getVerification')->name('email-verification');
 
 Route::post('validate/recaptcha', 'ValidationController@validateRecaptcha')->name('recatcha');
