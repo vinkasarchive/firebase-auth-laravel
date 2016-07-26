@@ -35,8 +35,7 @@
           </div>
           @else
           <div class="btn-group" role="group" aria-label="account">
-            <a href="{!! route('register') !!}" class="nav-btn btn btn-success">Create account</a>
-            <a href="{!! route('login') !!}" class="nav-btn btn btn-primary">Sign in</a>
+            <a href="{!! route('getAuth') !!}" class="nav-btn btn btn-primary">Sign in</a>
           </div>
           @endif
           @endif
